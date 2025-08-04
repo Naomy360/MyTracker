@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from '../api'; // ✅ Use centralized API instance
 
 const ProblemsList = () => {
   const [problems, setProblems] = useState([]);
@@ -7,8 +7,8 @@ const ProblemsList = () => {
   const [newStatus, setNewStatus] = useState('');
   const [newDifficulty, setNewDifficulty] = useState('');
 
-  const [filterDifficulty, setFilterDifficulty] = useState(''); // Filter by difficulty
-  const [filterStatus, setFilterStatus] = useState(''); // Filter by status
+  const [filterDifficulty, setFilterDifficulty] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
 
   useEffect(() => {
     fetchProblems();
@@ -16,7 +16,7 @@ const ProblemsList = () => {
 
   const fetchProblems = async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/problems');
+      const res = await API.get('/problems'); // ✅ Using API instance
       setProblems(res.data);
     } catch (err) {
       console.error('Error fetching problems:', err);
@@ -24,8 +24,12 @@ const ProblemsList = () => {
   };
 
   const deleteProblem = async (id) => {
-    await axios.delete(`http://localhost:5050/api/problems/${id}`);
-    fetchProblems();
+    try {
+      await API.delete(`/problems/${id}`); // ✅ Using API instance
+      fetchProblems();
+    } catch (err) {
+      console.error('Error deleting problem:', err);
+    }
   };
 
   const startEdit = (problem) => {
@@ -41,12 +45,16 @@ const ProblemsList = () => {
   };
 
   const saveEdit = async (id) => {
-    await axios.put(`http://localhost:5050/api/problems/${id}`, {
-      status: newStatus,
-      difficulty: newDifficulty,
-    });
-    setEditingProblem(null);
-    fetchProblems();
+    try {
+      await API.put(`/problems/${id}`, {
+        status: newStatus,
+        difficulty: newDifficulty,
+      }); // ✅ Using API instance
+      setEditingProblem(null);
+      fetchProblems();
+    } catch (err) {
+      console.error('Error updating problem:', err);
+    }
   };
 
   // ✅ Apply filters
