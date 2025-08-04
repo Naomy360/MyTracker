@@ -10,7 +10,10 @@ const AddProblemForm = ({ onProblemAdded }) => {
     e.preventDefault();
     try {
       const newProblem = { title, difficulty, status };
-      const res = await axios.post('http://localhost:5050/api/problems', newProblem);
+      import API from '../api';
+
+      const res = await API.post('/problems', newProblem);
+
       onProblemAdded(res.data);
       setTitle('');
       setDifficulty('');
