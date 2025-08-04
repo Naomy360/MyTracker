@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import API from '../api'; 
 
 const AddProblemForm = ({ onProblemAdded }) => {
   const [title, setTitle] = useState('');
@@ -10,11 +10,10 @@ const AddProblemForm = ({ onProblemAdded }) => {
     e.preventDefault();
     try {
       const newProblem = { title, difficulty, status };
-      import API from '../api';
-
-      const res = await API.post('/problems', newProblem);
-
+      const res = await API.post('/problems', newProblem); 
       onProblemAdded(res.data);
+
+      
       setTitle('');
       setDifficulty('');
       setStatus('');
