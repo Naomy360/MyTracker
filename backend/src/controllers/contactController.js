@@ -1,6 +1,6 @@
 import pool from '../db.js';
 
-// Add recruiter contact info
+// recruiter contact info
 export const addContact = async (req, res) => {
   const { name, email, message } = req.body;
   try {
