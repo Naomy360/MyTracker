@@ -29,33 +29,9 @@
 - **Backend:** Node.js, Express  
 - **Database:** PostgreSQL (Supabase for hosting)  
 - **API Communication:** Axios  
-- **Deployment:** Vercel / Netlify (Frontend), Render / Railway (Backend)  
+- **Deployment:** Vercel(Frontend), Render(Backend)  
 
 ---
 
-## 🛠 **Database Schema**
-
-### **Table: job_applications**
-```sql
-CREATE TABLE job_applications (
-  id SERIAL PRIMARY KEY,
-  company VARCHAR(100),
-  role VARCHAR(100),
-  status VARCHAR(50),
-  applied_date DATE,
-  notes TEXT,
-  contact_name VARCHAR(100),
-  contact_email VARCHAR(100)
-);
-```
-### **Table: dsa_problems**
-```sql
-CREATE TABLE dsa_problems (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(100),
-  difficulty VARCHAR(50),
-  status VARCHAR(50)
-);
-```
 
 
