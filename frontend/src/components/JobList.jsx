@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from '../api'; // ✅ Use centralized API instance
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -16,13 +16,21 @@ const JobList = () => {
   }, []);
 
   const fetchJobs = async () => {
-    const res = await axios.get('http://localhost:5050/api/jobs');
-    setJobs(res.data);
+    try {
+      const res = await API.get('/jobs'); // ✅ Using API instance
+      setJobs(res.data);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    }
   };
 
   const deleteJob = async (id) => {
-    await axios.delete(`http://localhost:5050/api/jobs/${id}`);
-    fetchJobs();
+    try {
+      await API.delete(`/jobs/${id}`); // ✅ Using API instance
+      fetchJobs();
+    } catch (err) {
+      console.error('Error deleting job:', err);
+    }
   };
 
   const startEdit = (job) => {
@@ -34,14 +42,18 @@ const JobList = () => {
   };
 
   const saveEdit = async (id) => {
-    await axios.put(`http://localhost:5050/api/jobs/${id}`, {
-      status: newStatus,
-      notes: newNotes,
-      contact_name: newContactName,
-      contact_email: newContactEmail
-    });
-    setEditingJob(null);
-    fetchJobs();
+    try {
+      await API.put(`/jobs/${id}`, {
+        status: newStatus,
+        notes: newNotes,
+        contact_name: newContactName,
+        contact_email: newContactEmail,
+      });
+      setEditingJob(null);
+      fetchJobs();
+    } catch (err) {
+      console.error('Error updating job:', err);
+    }
   };
 
   const formatDate = (dateString) => {
