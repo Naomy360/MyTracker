@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from '../api'; // ✅ Use centralized API config
 
 const Analytics = () => {
   const [jobStats, setJobStats] = useState({ total: 0, applied: 0, interview: 0, offer: 0, rejected: 0 });
@@ -8,12 +8,14 @@ const Analytics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobs = await axios.get('http://localhost:5050/api/jobs');
-        const problems = await axios.get('http://localhost:5050/api/problems');
+        // ✅ Use API instance instead of hardcoding localhost
+        const jobsResponse = await API.get('/jobs');
+        const problemsResponse = await API.get('/problems');
 
-        const jobData = jobs.data;
-        const problemData = problems.data;
+        const jobData = jobsResponse.data;
+        const problemData = problemsResponse.data;
 
+        // Calculate Job Stats
         const jobStatsCalculated = {
           total: jobData.length,
           applied: jobData.filter(j => j.status === 'Applied').length,
@@ -22,6 +24,7 @@ const Analytics = () => {
           rejected: jobData.filter(j => j.status === 'Rejected').length,
         };
 
+        // Calculate Problem Stats
         const problemStatsCalculated = {
           total: problemData.length,
           pending: problemData.filter(p => p.status === 'Pending').length,
