@@ -9,10 +9,9 @@
 # Project intro
 > A full-stack web app to track **job applications** and **DSA problems** in one place.  
 > Built with **React + Vite**, **Tailwind CSS**, **Node.js (Express)**, and **PostgreSQL**.
-```
 
  https://my-tracker-coral.vercel.app/
-```
+
 
 ---
 
