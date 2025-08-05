@@ -9,15 +9,15 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allowed origins: from .env or default values
+
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : [
-      'https://my-tracker-coral.vercel.app', // ✅ Your deployed frontend
-      'http://localhost:5173'               // Local development
+      'https://my-tracker-coral.vercel.app', 
+      'http://localhost:5173'              
     ];
 
-// ✅ CORS setup
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like Postman or curl)
@@ -32,15 +32,15 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Middleware
+
 app.use(express.json());
 
-// ✅ Health Check Route
+
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// ✅ API Routes
+
 app.use('/api/jobs', jobsRoutes);
 app.use('/api/problems', problemsRoutes);
 app.use('/api/contact', contactRoutes);
