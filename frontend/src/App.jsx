@@ -1,68 +1,48 @@
-import { useState, useEffect } from 'react';
-import JobList from './components/JobList';
-import AddJobForm from './components/AddJobForm';
-import ProblemsList from './components/ProblemsList';
-import AddProblemForm from './components/AddProblemForm';
-import Analytics from './components/Analytics';
-import API from './api'; // ✅ Centralized API instance
-import './index.css';
+import express from 'express';
+import cors from 'cors';
+import jobsRoutes from './routes/jobs.js';
+import problemsRoutes from './routes/problems.js';
+import contactRoutes from './routes/contact.js';
+import dotenv from 'dotenv';
 
-export default function App() {
-  const [refreshJobs, setRefreshJobs] = useState(false);
-  const [refreshProblems, setRefreshProblems] = useState(false);
-  const [userKey, setUserKey] = useState('');
+dotenv.config();
 
-  // ✅ Ensure each user has a unique key stored in localStorage
-  useEffect(() => {
-    let existingKey = localStorage.getItem('userKey');
-    if (!existingKey) {
-      existingKey = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem('userKey', existingKey);
+const app = express();
+
+// ✅ Allowed origins: from .env or default values
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : [
+      'https://my-tracker-coral.vercel.app', // ✅ Your deployed frontend
+      'http://localhost:5173'               // Local development
+    ];
+
+// ✅ CORS setup
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
-    setUserKey(existingKey);
+  },
+  credentials: true
+}));
 
-    // ✅ Attach userKey to every API request
-    API.defaults.headers.common['X-User-Key'] = existingKey;
-  }, []);
+// ✅ Middleware
+app.use(express.json());
 
-  if (!userKey) {
-    return <div className="loading">Initializing user session...</div>;
-  }
+// ✅ Health Check Route
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
 
-  return (
-    <div className="app-container">
-      {/* Header */}
-      <header className="header">
-        <h1>MyTracker</h1>
-        <p>Track your jobs and DSA progress effortlessly</p>
-      </header>
+// ✅ API Routes
+app.use('/api/jobs', jobsRoutes);
+app.use('/api/problems', problemsRoutes);
+app.use('/api/contact', contactRoutes);
 
-      <main className="main-container">
-        {/* Grid for Jobs & Problems */}
-        <div className="grid">
-          {/* Job Section */}
-          <div className="card job-section">
-            <h2>Job Applications</h2>
-            <AddJobForm onJobAdded={() => setRefreshJobs(!refreshJobs)} />
-            <hr />
-            <JobList key={refreshJobs} />
-          </div>
-
-          {/* Problems Section */}
-          <div className="card problem-section">
-            <h2>DSA Problems</h2>
-            <AddProblemForm onProblemAdded={() => setRefreshProblems(!refreshProblems)} />
-            <hr />
-            <ProblemsList key={refreshProblems} />
-          </div>
-        </div>
-
-        {/* Analytics Section */}
-        <div className="card analytics-section">
-          <h2>Analytics</h2>
-          <Analytics />
-        </div>
-      </main>
-    </div>
-  );
-}
+export default app;
