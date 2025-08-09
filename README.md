@@ -11,6 +11,7 @@
 > Built with **React + Vite**, **Tailwind CSS**, **Node.js (Express)**, and **PostgreSQL**.
 
 
+<img width="1560" height="715" alt="Screenshot 2025-08-04 at 12 05 07 AM" src="https://github.com/user-attachments/assets/12dde430-a8b4-49d1-b4f1-af07e323b5cc" />
 
 ---
 
